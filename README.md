@@ -31,6 +31,8 @@ For resource limits:
 
 So: `python3.6 -m da --default-proc-impl thread --logfile --logfilename FILENAME.txt --logfilelevel info <DAFILE>.da <dafile arguments>`
 
+For more complex programs you may get some error `RecursionError('maximum recursion depth exceeded in comparison',) Fatal Python error: Cannot recover from stack overflow.` -- even if there is no recursion in your code. In this case, you'll want to import `sys` and add `sys.setrecursionlimit(10**6)` to your `main()` function. I personally have found this sufficient for working with the TAMU servers, but depending on what you do, you may need to increase the total stack size as well (see https://stackoverflow.com/questions/3323001/ ).
+
 ## Resources of interest
 
 https://github.com/DistAlgo/distalgo -- Official repo for DistAlgo's python implementation

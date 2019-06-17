@@ -248,13 +248,15 @@ For asynchronous algorithms, don't use `await(x)`, since that enforces some sync
 
 Note that it's better to have the random delays in the message *receival* code. Suppose the delay were on the *sender's* side, and we had a broadcasting system. Then, when broadcasting to multiple nodes, same delay amount would be applied to all recipients. This is not ideal asynchrony.
 
-Also note the following:
+Also note that receive handlers are finicky in what they respond to:
 ```
 receive(msg = 'abc') waits for a message "abc", string type
 receive(msg = ('abc')) waits for a message "abc", string type
 receive(msg = ('abc',)) waits for a message ('abc',) tuple type
 ```
 (You can test the above with `type( ('abc',) )` in a python interpreter.)
+
+Likewise, pay attention to how your messages are spelled.  If you have one node with a handler `receive(msg = "whatever")` and another node sending the message `"Whatever"`, the first node's handler will never activate. 
 
 One more thing about receive handlers: In addition to defining receiving a message, you can also ask for metadata about the message, such as the clock and which node sent it. 
 
@@ -271,3 +273,4 @@ And for a `def receive()` handler on its own, I've written code that's like:
 ```def receive(msg = 'whatever', from_ = p)```
 
 The reason the first underscore in `from_` is necessary is because "from" is a reserved keyword in Python. However I'm not sure why some code uses `from_=_` and some uses just `from_ =`. This is another thing to ask about. When I wrote `def receive(msg = 'whatever', from_=_p)` I got a warning "new variable '%s' introduced by bound pattern." (see parser.py) -- this will eventually lead to bad behavior.
+
